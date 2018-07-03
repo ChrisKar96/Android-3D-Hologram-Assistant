@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Hologram Assistant</string>
+
+    <string name="dance">Dance</string>
+    <string name="greet">Greet</string>
+    <string name="wait">Wait</string>
+    <string name="run">Run</string>
+    <string name="yawn">Yawn</string>
+    <string name="yes">Yes</string>
+    <string name="defeat">Defeat</string>
+    <string name="victory">Victory</string>
+    <string name="think">Think</string>
+    <string name="no">No</string>
+    <string name="hello">Hello!</string>
+    <string name="lets_run">Let\'s run!</string>
+    <string name="ill_wait">I\'ll wait</string>
+    <string name="let_me_think">Let me think...</string>
+    <string name="im_tired">I\'m tired</string>
+    <string name="oh_no_defeat">Oh no! Defeat</string>
+    <string name="hooray_victory">Hooray! Victory!</string>
+    <string name="no_no_no">No no no!</string>
+    <string name="yes_str">Yes!</string>
+    <string name="lets_dance">Let\'s dance!</string>
+</resources>
