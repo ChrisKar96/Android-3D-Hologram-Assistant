@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fullscreen_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/background_dark"
+    android:keepScreenOn="true"
     tools:context=".MainActivity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
@@ -17,8 +19,8 @@
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/left"
-        android:layout_width="98dp"
-        android:layout_height="98dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:rotation="90"
         android:src="@drawable/credits_left"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -28,8 +30,8 @@
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/front"
-        android:layout_width="98dp"
-        android:layout_height="98dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:rotation="180"
         android:src="@drawable/credits_front"
         app:layout_constraintEnd_toEndOf="parent"
@@ -48,10 +50,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/settings"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/baseline_settings_white_48"
+        app:layout_constraintBottom_toBottomOf="@+id/space"
+        app:layout_constraintEnd_toEndOf="@+id/space"
+        app:layout_constraintStart_toEndOf="@+id/right"
+        app:layout_constraintTop_toBottomOf="@+id/back" />
+
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/back"
-        android:layout_width="98dp"
-        android:layout_height="98dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:adjustViewBounds="true"
         android:scaleType="fitStart"
         android:src="@drawable/credits_back"
@@ -73,8 +89,8 @@
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/right"
-        android:layout_width="98dp"
-        android:layout_height="98dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:rotation="270"
         android:src="@drawable/credits_right"
         app:layout_constraintBottom_toBottomOf="parent"

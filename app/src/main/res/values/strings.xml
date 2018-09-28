@@ -21,4 +21,7 @@
     <string name="no_no_no">No no no!</string>
     <string name="yes_str">Yes!</string>
     <string name="lets_dance">Let\'s dance!</string>
+    <string name="credits">Credits</string>
+    <string name="change_gif_size">Change GIF size</string>
+    <string name="preProgress">Current size modifier = x</string>
 </resources>

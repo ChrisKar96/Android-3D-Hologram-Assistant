@@ -1,16 +1,27 @@
 package net.ddns.christoskaramo.hologramassistant;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.Voice;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import java.util.Locale;
 
@@ -91,8 +102,16 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    public static final String myPrefs = "myPrefs" ;
     TextToSpeech tts;
-    Button greet , dance , wait , yes , no , victory , defeat , think , run , yawn;
+    Button greet , dance , wait , yes , no , victory , defeat , think , run , yawn, settings;
+    final int gifSize=100;
+    SharedPreferences sharedpreferences;
+
+    GifImageView front;
+    GifImageView left;
+    GifImageView right;
+    GifImageView back;
 
     void tts_speak(int str){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -108,6 +127,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+        WindowManager.LayoutParams layout = getWindow().getAttributes();
+        layout.screenBrightness = 1F;
+        getWindow().setAttributes(layout);
 
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
@@ -126,10 +148,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        final GifImageView front = findViewById(R.id.front);
-        final GifImageView left = findViewById(R.id.left);
-        final GifImageView right = findViewById(R.id.right);
-        final GifImageView back = findViewById(R.id.back);
+        front = findViewById(R.id.front);
+        left = findViewById(R.id.left);
+        right = findViewById(R.id.right);
+        back = findViewById(R.id.back);
+
+        sharedpreferences = getSharedPreferences(myPrefs, Context.MODE_PRIVATE);
+        if(sharedpreferences == null || !sharedpreferences.contains("GifSize") || sharedpreferences.getFloat("GifSize",Context.MODE_PRIVATE) < 1 || sharedpreferences.getFloat("GifSize",Context.MODE_PRIVATE) > 2){
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putFloat("GifSize",1);
+            editor.commit();
+        }
+
+        int dimensionInDp = calcDimension(sharedpreferences.getFloat("GifSize",Context.MODE_PRIVATE));
+
+        changeGifsize(dimensionInDp);
 
         greet = findViewById(R.id.greet);
         dance = findViewById(R.id.dance);
@@ -141,6 +174,13 @@ public class MainActivity extends AppCompatActivity {
         wait = findViewById(R.id.wait);
         think = findViewById(R.id.think);
         yawn = findViewById(R.id.yawn);
+        settings = findViewById(R.id.settings);
+
+        settings.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                ShowDialog();
+            }
+        });
 
         greet.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -249,6 +289,29 @@ public class MainActivity extends AppCompatActivity {
                 tts.setSpeechRate((float) 1);
             }
         });
+
+    }
+
+    private int calcDimension(float gifSizeTimes) {
+       return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, gifSize*gifSizeTimes, getResources().getDisplayMetrics());
+    }
+
+    private void changeGifsize(int dimensionInDp) {
+        ConstraintLayout.LayoutParams lpf = (ConstraintLayout.LayoutParams) front.getLayoutParams();
+        lpf.height = lpf.width = dimensionInDp;
+        front.setLayoutParams(lpf);
+
+        ConstraintLayout.LayoutParams lpl = (ConstraintLayout.LayoutParams) left.getLayoutParams();
+        lpl.height = lpl.width = dimensionInDp;
+        left.setLayoutParams(lpl);
+
+        ConstraintLayout.LayoutParams lpr = (ConstraintLayout.LayoutParams) right.getLayoutParams();
+        lpr.height = lpr.width = dimensionInDp;
+        right.setLayoutParams(lpr);
+
+        ConstraintLayout.LayoutParams lpb = (ConstraintLayout.LayoutParams) back.getLayoutParams();
+        lpb.height = lpb.width = dimensionInDp;
+        back.setLayoutParams(lpb);
     }
 
     @Override
@@ -304,4 +367,57 @@ public class MainActivity extends AppCompatActivity {
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
+    public void ShowDialog(){
+        final AlertDialog.Builder popDialog = new AlertDialog.Builder(this);
+        final LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+
+        final View Viewlayout = inflater.inflate(R.layout.dialog_layout,
+                (ViewGroup) findViewById(R.id.layout_dialog));
+
+        final TextView sizeTxt = Viewlayout.findViewById(R.id.txtItem1);
+        final SeekBar seek = Viewlayout.findViewById(R.id.seekBar1);
+        seek.setMax(10);
+        seek.setProgress((int) (sharedpreferences.getFloat("GifSize",MODE_PRIVATE) * 10)-10);
+        sizeTxt.setText(String.format("%s%s", getString(R.string.preProgress), Float.toString((sharedpreferences.getFloat("GifSize",MODE_PRIVATE)))));
+        popDialog.setTitle("Please select GIF size");
+        popDialog.setView(Viewlayout);
+        seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
+                //Do something here with new value
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putFloat("GifSize",(float)(10+progress)/10);
+                editor.apply();
+                sizeTxt.setText(String.format("%s%s", getString(R.string.preProgress), Float.toString((float) (10 + progress) / 10)));
+                changeGifsize(calcDimension(sharedpreferences.getFloat("GifSize",MODE_PRIVATE)));
+            }
+            public void onStartTrackingTouch(SeekBar arg0) {
+                // TODO Auto-generated method stub
+            }
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
+        });
+
+        // Button OK
+        popDialog.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        // Button Credits
+        popDialog.setNeutralButton("Credits",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        front.setImageResource(R.drawable.credits_front);
+                        left.setImageResource(R.drawable.credits_left);
+                        right.setImageResource(R.drawable.credits_right);
+                        back.setImageResource(R.drawable.credits_back);
+                        dialog.dismiss();
+                    }
+                });
+        popDialog.create();
+        popDialog.show();
+        hide();
+    }
 }

@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="net.ddns.christoskaramo.hologramassistant">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="net.ddns.christoskaramo.hologramassistant"
+    android:installLocation="auto">
 
     <supports-screens
         android:smallScreens="false"
         android:normalScreens="true"
         android:largeScreens="true"
         android:xlargeScreens="true"
-        android:requiresSmallestWidthDp="300"
-        />
-
+        android:requiresSmallestWidthDp="300" />
 
     <application
+
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
-            android:theme="@style/FullscreenTheme"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:theme="@style/FullscreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
